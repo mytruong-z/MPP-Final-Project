@@ -1,0 +1,53 @@
+isbn, author, title, maxCheckoutLength
+978-0-439-02348-2,Mary Johnson,Data Structures and Algorithms,25
+978-0-306-40615-7,John Smith,Introduction to Programming,15
+978-0-14-243720-9,David Brown,Object-Oriented Design,20
+978-0-439-86222-8,Emily Davis,Database Systems,18
+978-0-486-27557-6,Michael Wilson,Software Engineering,22
+978-0-306-40615-7,John Smith,Introduction to Programming,17
+978-0-439-02348-2,Mary Johnson,Data Structures and Algorithms,30
+978-0-14-243720-9,David Brown,Object-Oriented Design,28
+978-0-439-86222-8,Emily Davis,Database Systems,12
+978-0-486-27557-6,Michael Wilson,Software Engineering,16
+978-0-306-40615-7,John Smith,Introduction to Programming,14
+978-0-439-02348-2,Mary Johnson,Data Structures and Algorithms,27
+978-0-14-243720-9,David Brown,Object-Oriented Design,21
+978-0-439-86222-8,Emily Davis,Database Systems,19
+978-0-486-27557-6,Michael Wilson,Software Engineering,24
+978-0-306-40615-7,John Smith,Introduction to Programming,13
+978-0-439-02348-2,Mary Johnson,Data Structures and Algorithms,29
+978-0-14-243720-9,David Brown,Object-Oriented Design,23
+978-0-439-86222-8,Emily Davis,Database Systems,11
+978-0-486-27557-6,Michael Wilson,Software Engineering,26
+978-0-306-40615-7,John Smith,Introduction to Programming,16
+978-0-439-02348-2,Mary Johnson,Data Structures and Algorithms,20
+978-0-14-243720-9,David Brown,Object-Oriented Design,17
+978-0-439-86222-8,Emily Davis,Database Systems,25
+978-0-486-27557-6,Michael Wilson,Software Engineering,30
+978-0-306-40615-7,John Smith,Introduction to Programming,18
+978-0-439-02348-2,Mary Johnson,Data Structures and Algorithms,22
+978-0-14-243720-9,David Brown,Object-Oriented Design,15
+978-0-439-86222-8,Emily Davis,Database Systems,28
+978-0-486-27557-6,Michael Wilson,Software Engineering,21
+978-0-306-40615-7,John Smith,Introduction to Programming,19
+978-0-439-02348-2,Mary Johnson,Data Structures and Algorithms,23
+978-0-14-243720-9,David Brown,Object-Oriented Design,16
+978-0-439-86222-8,Emily Davis,Database Systems,24
+978-0-486-27557-6,Michael Wilson,Software Engineering,29
+978-0-306-40615-7,John Smith,Introduction to Programming,12
+978-0-439-02348-2,Mary Johnson,Data Structures and Algorithms,26
+978-0-14-243720-9,David Brown,Object-Oriented Design,22
+978-0-439-86222-8,Emily Davis,Database Systems,14
+978-0-486-27557-6,Michael Wilson,Software Engineering,27
+978-0-306-40615-7,John Smith,Introduction to Programming,21
+978-0-439-02348-2,Mary Johnson,Data Structures and Algorithms,15
+978-0-14-243720-9,David Brown,Object-Oriented Design,18
+978-0-439-86222-8,Emily Davis,Database Systems,16
+978-0-486-27557-6,Michael Wilson,Software Engineering,19
+978-0-306-40615-7,John Smith,Introduction to Programming,20
+978-0-439-02348-2,Mary Johnson,Data Structures and Algorithms,24
+978-0-14-243720-9,David Brown,Object-Oriented Design,13
+978-0-439-86222-8,Emily Davis,Database Systems,30
+978-0-486-27557-6,Michael Wilson,Software Engineering,17
+978-0-306-40615-7,John Smith,Introduction to Programming,23
+978-0-439-02348-2,Mary Johnson,Data Structures and

@@ -16,8 +16,6 @@ public class LibrarySystem {
         LibraryMember libraryMember = new LibraryMember(memberNo, firstName, lastName, phoneNumber, address);
 
         //dataAccess.saveNewMember(libraryMember);
-
-
     }
     private Address initAddress(String state, String city, String street, String zip) {
         return new Address(state, city, street, zip);

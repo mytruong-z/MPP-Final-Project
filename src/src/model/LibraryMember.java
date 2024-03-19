@@ -7,6 +7,7 @@ public class LibraryMember {
     private String phone;
 
     private Address address;
+    private CheckoutRecord checkoutRecord;
 
     public LibraryMember(String memberId, String firstName, String lastName, String phone, Address address) {
         this.memberId = memberId;
@@ -55,4 +56,13 @@ public class LibraryMember {
     public void setPhone(String phone) {
         this.phone = phone;
     }
+
+    public void addCheckOutRecordEntry(CheckoutRecordEntry entry) {
+        if(checkoutRecord == null) {
+            checkoutRecord = new CheckoutRecord();
+        }
+        checkoutRecord.addCheckOutRecordEntry(entry);
+    }
 }
+
+

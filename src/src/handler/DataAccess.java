@@ -1,11 +1,12 @@
 package handler;
 
-import model.Author;
-import model.Book;
+import model.*;
 
+import java.lang.reflect.Member;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 
 import static handler.CSVReader.readCSVIntoMap;
 
@@ -68,4 +69,80 @@ public class DataAccess {
         return STR."\{directoryPath}\{property}src\{property}dummy\{property}\{filename}";
     }
 
+    public static void addMember(LibraryMember newMember) {
+        List<String> dataWriter = new ArrayList<>();
+        List<LibraryMember> allMembers = getMembers();
+        allMembers.add(newMember);
+        String title = "memberId, firstName, lastName, phone, address";
+        dataWriter.add(title);
+        for (LibraryMember member: allMembers) {
+            String data = STR."\{member.memberId()},\{member.firstName()},\{member.lastName()},\{member.phone()},\{member.getAddress()}";
+            dataWriter.add(data);
+        }
+        String memDirectory = getFilePath("member.csv");
+        CSVWriter.writeCSV(memDirectory, dataWriter);
+    }
+
+    private static List<LibraryMember> getMembers() {
+        List<LibraryMember> members = new ArrayList<>();
+        String memDirectory = getFilePath("member.csv");
+        List<HashMap<String, String>> dataMap = readCSVIntoMap(memDirectory);
+        for (HashMap<String, String> map: dataMap) {
+            var member = map.values().toArray();
+            members.add(
+                new LibraryMember(
+                    member[0].toString(),
+                    member[1].toString(),
+                    member[2].toString(),
+                    member[3].toString(),
+                    new Address(member[4].toString(), member[5].toString(), member[6].toString(), member[7].toString())
+                )
+            );
+        }
+        return members;
+    }
+
+    public static Optional<Book> searchBook(String isbn) {
+        List<Book> books = getBooks();
+        for (Book book: books) {
+            if (book.isbn().equals(isbn)) {
+                return Optional.of(book);
+            }
+        }
+        return Optional.empty();
+    }
+
+    public static Optional<LibraryMember> searchMember(String memberId) {
+        List<LibraryMember> members = getMembers();
+        for (LibraryMember member: members) {
+            if (member.memberId().equals(memberId)) {
+                return Optional.of(member);
+            }
+        }
+        return Optional.empty();
+    }
+
+    public static BookCopy nextAvailableBookCopy(String isbn) {
+        List<Book> books = getBooks();
+        for (Book book: books) {
+            if (book.isbn().equals(isbn)) {
+                List<BookCopy> copies = book.copies();
+                for (BookCopy copy: copies) {
+                    if (copy.getAvailability()) {
+                        return copy;
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    public static void saveMemberCheckoutRecord(String memberId, CheckoutRecordEntry entry) {
+        List<LibraryMember> members = getMembers();
+        for (LibraryMember member: members) {
+            if (member.memberId().equals(memberId)) {
+                member.addCheckOutRecordEntry(entry);
+            }
+        }
+    }
 }

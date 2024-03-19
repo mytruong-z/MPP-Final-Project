@@ -6,15 +6,15 @@ public class Author {
     private String credentials;
     private String phone;
 
-    public String firstName() {
-        return firstName;
-    }
-
     public Author(String firstName, String lastName, String phone, String credentials) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.phone = phone;
         this.credentials = credentials;
+    }
+
+    public String firstName() {
+        return firstName;
     }
 
     public void setFirstName(String firstName) {

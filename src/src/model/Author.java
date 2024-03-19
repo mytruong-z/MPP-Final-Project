@@ -10,6 +10,13 @@ public class Author {
         return firstName;
     }
 
+    public Author(String firstName, String lastName, String phone, String credentials) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.phone = phone;
+        this.credentials = credentials;
+    }
+
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }

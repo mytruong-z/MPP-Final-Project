@@ -1,10 +1,19 @@
 package model;
 
+import static java.lang.StringTemplate.STR;
+
 public class Book {
     private String isbn;
     private String author;
     private String title;
     private Integer maxCheckoutLength;
+
+    public Book(String isbn, String title, String author, Integer maxCheckoutLenght) {
+        this.isbn = isbn;
+        this.title = title;
+        this.author = author;
+        this.maxCheckoutLength = maxCheckoutLenght;
+    }
 
     public String isbn() {
         return isbn;
@@ -36,5 +45,10 @@ public class Book {
 
     public void setMaxCheckoutLength(Integer maxCheckoutLength) {
         this.maxCheckoutLength = maxCheckoutLength;
+    }
+
+    @Override
+    public String toString() {
+        return STR."\{isbn}, \{author}, \{title}, \{maxCheckoutLength}";
     }
 }

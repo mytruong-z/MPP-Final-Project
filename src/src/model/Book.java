@@ -49,6 +49,6 @@ public class Book {
 
     @Override
     public String toString() {
-        return STR."\{isbn}, \{author}, \{title}, \{maxCheckoutLength}";
+        return STR."\{isbn},\{author},\{title},\{maxCheckoutLength}";
     }
 }

@@ -6,6 +6,24 @@ public class LibraryMember {
     private String lastName;
     private String phone;
 
+    private Address address;
+
+    public LibraryMember(String memberId, String firstName, String lastName, String phone, Address address) {
+        this.memberId = memberId;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.phone = phone;
+        this.address = address;
+    }
+
+    public Address getAddress() {
+        return address;
+    }
+
+    public void setAddress(Address address) {
+        this.address = address;
+    }
+
     public String memberId() {
         return memberId;
     }

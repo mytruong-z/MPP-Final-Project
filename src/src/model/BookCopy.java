@@ -2,21 +2,22 @@ package model;
 
 public class BookCopy {
     private int copyNumber;
-    private boolean availability;
-    private Book book;
+    private String  isbn;
+    private String publisher;
+    private boolean availability = true;
 
-
-    public BookCopy(int copyNumber) {
+    public BookCopy(String isbn, String publisher, int copyNumber) {
         this.copyNumber = copyNumber;
-        this.availability = true;
+        this.isbn = isbn;
+        this.publisher = publisher;
     }
 
-    public Book getBook() {
-        return book;
+    public String getIsbn() {
+        return isbn;
     }
 
-    public void setBook(Book book) {
-        this.book =  book;
+    public String getPublisher() {
+        return publisher;
     }
 
     public int getCopyNumber() {

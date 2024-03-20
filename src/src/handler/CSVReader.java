@@ -56,7 +56,7 @@ public class CSVReader {
                 }
                 result.add(data);
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         System.out.println(result.size());

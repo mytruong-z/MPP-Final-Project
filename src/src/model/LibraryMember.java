@@ -1,5 +1,7 @@
 package model;
 
+import java.util.List;
+
 public class LibraryMember {
     private String memberId;
     private String firstName;
@@ -15,6 +17,7 @@ public class LibraryMember {
         this.lastName = lastName;
         this.phone = phone;
         this.address = address;
+        checkoutRecord = new CheckoutRecord();
     }
 
     public Address getAddress() {
@@ -63,6 +66,21 @@ public class LibraryMember {
         }
         checkoutRecord.addCheckOutRecordEntry(entry);
     }
+
+    public CheckoutRecord getCheckoutRecord() {
+        return checkoutRecord;
+    }
+
+    @Override
+    public String toString() {
+        return
+                "memberId='" + memberId + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", phone='" + phone + '\'' +
+                ", address=" + address.toString();
+    }
+
 }
 
 

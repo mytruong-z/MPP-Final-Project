@@ -5,13 +5,41 @@ import java.time.LocalDate;
 public class CheckoutRecordEntry {
     private LocalDate checkoutDate;
     private LocalDate dueDate;
-    private BookCopy bookCopy;
+
+    private String isbn;
+    private String memberId;
     private CheckoutRecord checkOutRecord;
 
-    public CheckoutRecordEntry(LocalDate checkoutDate, LocalDate dueDate, BookCopy bookCopy) {
+    public CheckoutRecordEntry(LocalDate checkoutDate, LocalDate dueDate, String memberId, String isbn) {
+        this.isbn = isbn;
+        this.memberId = memberId;
         this.checkoutDate = checkoutDate;
         this.dueDate = dueDate;
-        this.bookCopy = bookCopy;
+    }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("CheckoutRecordEntry{");
+        sb.append("checkoutDate=").append(checkoutDate);
+        sb.append(", dueDate=").append(dueDate);
+        sb.append('}');
+        return sb.toString();
+    }
+
+    public String getIsbn() {
+        return isbn;
+    }
+
+    public void setIsbn(String isbn) {
+        this.isbn = isbn;
+    }
+
+    public String getMemberId() {
+        return memberId;
+    }
+
+    public void setMemberId(String memberId) {
+        this.memberId = memberId;
     }
 
     public CheckoutRecord checkOutRecord() {
@@ -21,9 +49,6 @@ public class CheckoutRecordEntry {
 
     public void setCheckOutRecord(CheckoutRecord checkOutRecord) {
         this.checkOutRecord = checkOutRecord;
-    }
-    public BookCopy bookCopy() {
-        return bookCopy;
     }
     public LocalDate checkoutDate() {
         return checkoutDate;

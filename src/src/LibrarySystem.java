@@ -1,7 +1,10 @@
 import handler.DataAccess;
 import model.*;
 
+import javax.xml.crypto.Data;
+import java.lang.reflect.Member;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 public class LibrarySystem {
@@ -23,27 +26,40 @@ public class LibrarySystem {
         DataAccess.addMember(libraryMember);
     }
 
-    public void checkOutBook(String memberId, String isbn) {
-        Optional<Book> book = DataAccess.searchBook(isbn);
+    public Boolean checkOutBook(String memberId, String isbn) {
+        //Check if member exists
         Optional<LibraryMember> member = DataAccess.searchMember(memberId);
-
-        if (member.isPresent() && book.isPresent()) {
-            BookCopy availableBookCopy = DataAccess.nextAvailableBookCopy(isbn);
-            LocalDate todaysDate = LocalDate.now();
-            int checkOutLength = book.get().maxCheckoutLength();
-            LocalDate dueDate = todaysDate.plusDays(checkOutLength);
-
-            CheckoutRecordEntry checkoutRecordEntry = new CheckoutRecordEntry(todaysDate, dueDate, availableBookCopy);
-            availableBookCopy.setAvailability(false);
-
-            DataAccess.saveMemberCheckoutRecord(memberId, checkoutRecordEntry);
-        } else if (member.isEmpty()) {
-           //Show error message: Member not found
-
-        } else if (book.isEmpty()) {
-            //Show error message: Book not found
+        if (member.isEmpty()) {
+            //Show error message: Member not found
+            System.out.println("Member not found");
+            return false;
         }
+        //Check if book exists
+        Optional<Book> book = DataAccess.searchBook(isbn);
+        if (book.isEmpty()) {
+            //Show error message: Book not found
+            System.out.println("Book not found");
+            return false;
+        }
+       //Check if book is available
+        BookCopy availableBookCopy = DataAccess.nextAvailableBookCopy(isbn);
+        if (availableBookCopy == null) {
+            //Show error message: Book not available
+            System.out.println("Book not available");
+            return false;
+        }
+        //Check out book
+        CheckoutRecordEntry checkoutRecordEntry = new CheckoutRecordEntry(
+                LocalDate.now(),
+                LocalDate.now().plusDays(book.get().maxCheckoutLength()),
+                isbn,
+                memberId
+        );
+        member.get().addCheckOutRecordEntry(checkoutRecordEntry);
 
+        //Save changes
+        DataAccess.saveMemberCheckoutRecord(checkoutRecordEntry);
+        return true;
     }
     private Address initAddress(String state, String city, String street, String zip) {
         return new Address(state, city, street, zip);
@@ -51,5 +67,17 @@ public class LibrarySystem {
 
     public void addBook(Book book) {
         DataAccess.addBook(book);
+    }
+
+    public List<Book> getAllBooks() {
+        return DataAccess.getBooks();
+    }
+
+    public List<LibraryMember> getAllMembers(){
+        return DataAccess.getMembers();
+    }
+
+    public void addBookCopy(String isbnNumber, String publisher, int copyNumber) {
+        DataAccess.addBookCopy(isbnNumber, publisher, copyNumber);
     }
 }

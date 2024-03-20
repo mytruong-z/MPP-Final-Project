@@ -12,7 +12,7 @@ public class Book {
     private Integer maxCheckoutLength;
     private List<BookCopy> copies;
 
-    public Book(String isbn, String title, String author, Integer maxCheckoutLenght) {
+    public Book(String isbn, String author, String title, Integer maxCheckoutLenght) {
         this.isbn = isbn;
         this.title = title;
         this.author = author;
@@ -21,12 +21,16 @@ public class Book {
     public List<BookCopy> copies() {
         return copies;
     }
+
     public void addCopy(BookCopy copy) {
         if (copies == null) {
             copies = new ArrayList<>();
         }
-        copy.setBook(this);
         copies.add(copy);
+    }
+
+    public void setCopies(List<BookCopy> copies) {
+        this.copies = copies;
     }
 
     public String isbn() {

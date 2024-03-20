@@ -3,6 +3,7 @@ package handler;
 import model.*;
 
 import java.lang.reflect.Member;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -17,21 +18,44 @@ public class DataAccess {
 //    }
     public static List<Book> getBooks() {
         List<Book> books = new ArrayList<Book>();
-        String bookDirectory = getFilePath("book.csv");
-        List<HashMap<String, String>> dataMap = readCSVIntoMap(bookDirectory);
-        for (HashMap<String, String> map: dataMap) {
-            var book = map.values().toArray();
-            Integer maxCheckoutLen = Integer.valueOf(book[2].toString());
-            books.add(
-                new Book(
-                    book[0].toString(),
-                    book[1].toString(),
-                    book[3].toString(),
-                    maxCheckoutLen
-                )
-            );
+        try {
+            String bookDirectory = getFilePath("book.csv");
+            List<HashMap<String, String>> dataMap = readCSVIntoMap(bookDirectory);
+
+            String bookCopyDirectory = getFilePath("bookCopy.csv");
+            List<HashMap<String, String>> bookCopyDataMap = readCSVIntoMap(bookCopyDirectory);
+
+            for (HashMap<String, String> map: dataMap) {
+                var book = map.values().toArray();
+                Integer maxCheckoutLen = Integer.valueOf(book[2].toString().trim());
+                Book newBook = new Book(
+                        book[0].toString(),
+                        book[3].toString(),
+                        book[1].toString(),
+                        maxCheckoutLen
+                );
+                for (HashMap<String, String> bookCopyMap: bookCopyDataMap) {
+                    var bookCopy = bookCopyMap.values().toArray();
+                    if (bookCopy[0].toString().equals(newBook.isbn())) {
+                        newBook.addCopy(
+                                new BookCopy(
+                                        bookCopy[0].toString(),
+                                        bookCopy[2].toString(),
+                                        Integer.parseInt(bookCopy[1].toString())
+                                )
+                        );
+                    }
+                }
+                books.add(newBook);
+            }
         }
-        return books;
+        catch (Exception ex)
+        {
+            System.out.println(ex.getMessage());
+        }
+        finally {
+            return books;
+        }
     }
 
     public static void addBook(Book newBook) {
@@ -73,31 +97,35 @@ public class DataAccess {
         List<String> dataWriter = new ArrayList<>();
         List<LibraryMember> allMembers = getMembers();
         allMembers.add(newMember);
-        String title = "memberId, firstName, lastName, phone, address";
+        String title = "memberId,fname,lname,phone,state,city,street,zip";
         dataWriter.add(title);
         for (LibraryMember member: allMembers) {
-            String data = STR."\{member.memberId()},\{member.firstName()},\{member.lastName()},\{member.phone()},\{member.getAddress()}";
+            String data = STR."\{member.memberId()},\{member.firstName()},\{member.lastName()},\{member.phone()},\{member.getAddress().state()},\{member.getAddress().city()},\{member.getAddress().street()},\{member.getAddress().zipCode()}";
             dataWriter.add(data);
         }
         String memDirectory = getFilePath("member.csv");
         CSVWriter.writeCSV(memDirectory, dataWriter);
     }
 
-    private static List<LibraryMember> getMembers() {
+    public static List<LibraryMember> getMembers() {
+        List<CheckoutRecordEntry> entries = getCheckOutRecordEntries();
         List<LibraryMember> members = new ArrayList<>();
         String memDirectory = getFilePath("member.csv");
         List<HashMap<String, String>> dataMap = readCSVIntoMap(memDirectory);
         for (HashMap<String, String> map: dataMap) {
-            var member = map.values().toArray();
-            members.add(
-                new LibraryMember(
-                    member[0].toString(),
-                    member[1].toString(),
-                    member[2].toString(),
-                    member[3].toString(),
-                    new Address(member[4].toString(), member[5].toString(), member[6].toString(), member[7].toString())
-                )
+            LibraryMember member = new LibraryMember(
+                    map.get("memberId"),
+                    map.get("fname"),
+                    map.get("lname"),
+                    map.get("phone"),
+                    new Address(map.get("state"), map.get("city"), map.get("street"), map.get("zip"))
             );
+            for (CheckoutRecordEntry entry: entries) {
+                if (entry.getMemberId().equals(member.memberId())) {
+                    member.addCheckOutRecordEntry(entry);
+                }
+            }
+            members.add(member);
         }
         return members;
     }
@@ -136,13 +164,67 @@ public class DataAccess {
         }
         return null;
     }
-
-    public static void saveMemberCheckoutRecord(String memberId, CheckoutRecordEntry entry) {
-        List<LibraryMember> members = getMembers();
-        for (LibraryMember member: members) {
-            if (member.memberId().equals(memberId)) {
-                member.addCheckOutRecordEntry(entry);
-            }
+    public static void addBookCopy(String isbnNumber, String publisher, int copyNumber) {
+        List<String> dataWriter = new ArrayList<>();
+        List<BookCopy> allBookCopies = getBookCopies();
+        allBookCopies.add(new BookCopy(isbnNumber, publisher, copyNumber));
+        String title = "isbn,publisher,copyNumber,availability";
+        dataWriter.add(title);
+        for (BookCopy copy: allBookCopies) {
+            String data = STR."\{copy.getIsbn()},\{copy.getPublisher()},\{copy.getCopyNumber()},\{copy.getAvailability()}";
+            dataWriter.add(data);
         }
+        String bookCopyDirectory = getFilePath("bookCopy.csv");
+        CSVWriter.writeCSV(bookCopyDirectory, dataWriter);
+
+    }
+
+    private static List<BookCopy> getBookCopies() {
+        List<BookCopy> bookCopies = new ArrayList<>();
+        String bookCopyDirectory = getFilePath("bookCopy.csv");
+        List<HashMap<String, String>> dataMap = readCSVIntoMap(bookCopyDirectory);
+        for (HashMap<String, String> map: dataMap) {
+            var bookCopy = map.values().toArray();
+            bookCopies.add(
+                    new BookCopy(
+                            map.get("isbn"),
+                            map.get("publisher"),
+                            Integer.parseInt(map.get("copyNumber"))                    )
+            );
+        }
+        return bookCopies;
+    }
+
+    public static void saveMemberCheckoutRecord(CheckoutRecordEntry entry) {
+        List<String> dataWriter = new ArrayList<>();
+        List<CheckoutRecordEntry> entries = getCheckOutRecordEntries();
+        entries.add(entry);
+        String title = "checkoutDate,dueDate,memberId,isbn";
+        dataWriter.add(title);
+        for (CheckoutRecordEntry recordEntry: entries) {
+            String data = STR."\{recordEntry.checkoutDate()},\{recordEntry.dueDate()},\{recordEntry.getMemberId()},\{recordEntry.getIsbn()}";
+            dataWriter.add(data);
+        }
+        String entryDirectory = getFilePath("checkoutRecordEntry.csv");
+        CSVWriter.writeCSV(entryDirectory, dataWriter);
+
+    }
+
+    private static List<CheckoutRecordEntry> getCheckOutRecordEntries() {
+        List<CheckoutRecordEntry> entries = new ArrayList<>();
+        String entryDirectory = getFilePath("checkoutRecordEntry.csv");
+        List<HashMap<String, String>> dataMap = readCSVIntoMap(entryDirectory);
+        for (HashMap<String, String> map: dataMap) {
+            var entry = map.values().toArray();
+            entries.add(
+                    new CheckoutRecordEntry(
+                            LocalDate.parse(map.get("checkoutDate")),
+                            LocalDate.parse(map.get("dueDate")),
+                            map.get("memberId"),
+                            map.get("isbn")
+                    )
+            );
+        }
+        return entries;
     }
 }

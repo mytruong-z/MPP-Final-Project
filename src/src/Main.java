@@ -1,6 +1,8 @@
 import handler.DataAccess;
 import model.*;
 
+import java.time.LocalDate;
+import java.util.List;
 import java.util.Scanner;
 
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
@@ -25,6 +27,12 @@ public class Main {
             scanner.nextLine(); // Consume newline character
 
             switch (choice) {
+                case -1:
+                    library.getAllMembers().forEach(System.out::println);
+                    break;
+                case 0:
+                    library.getAllBooks().forEach(System.out::println);
+                    break;
                 case 1:
                     System.out.print("Enter book isbn: ");
                     String isbn = scanner.nextLine();
@@ -40,22 +48,26 @@ public class Main {
                     break;
 
                 case 2:
-                    System.out.print("Enter book title to add copy: ");
-                    String copyTitle = scanner.nextLine();
-                    // Assuming some implementation to add copy
+                    System.out.print("Please enter the book isbn: ");
+                    String isbnNumber = scanner.nextLine();
+                    System.out.print("Please enter the publisher: ");
+                    String publisher = scanner.nextLine();
+                    System.out.print("Please enter the number of copy: ");
+                    String numCopies = scanner.nextLine();
+                    library.addBookCopy(isbnNumber, publisher, Integer.parseInt(numCopies));
                     System.out.println("Book copy added successfully!\n");
                     break;
-
                 case 3:
-                    System.out.print("Enter book title to check out: ");
+                    System.out.print("Enter book isbn to check out: ");
                     String checkoutTitle = scanner.nextLine();
                     System.out.print("Enter member id: ");
                     String memberName = scanner.nextLine();
-                    library.checkOutBook(memberName, checkoutTitle);
-                    // Assuming some implementation to check out a book
-                    System.out.println("Book checked out successfully!\n");
+                    Boolean result = library.checkOutBook(memberName, checkoutTitle);
+                    if(result){
+                        // Assuming some implementation to check out a book
+                        System.out.println("Book checked out successfully!\n");
+                    }
                     break;
-
                 case 4:
                     System.out.print("Enter member id: ");
                     String memberId = scanner.nextLine();
@@ -78,8 +90,28 @@ public class Main {
                     System.out.println("New member added successfully!\n");
                     break;
                 case 5:
-                    System.out.println("Check Out Record:");
+                    System.out.print("Enter due date: ");
+                    int dueDate = scanner.nextInt();
                     // Assuming some implementation to display check out record
+                    LocalDate date = LocalDate.now().plusDays(dueDate);
+//                    DataAccess.getMembers()
+//                            .stream()
+//                            .flatMap(member -> member.getCheckoutRecord().getCheckOutRecordEntries().stream())
+//                                    .filter(entry -> entry.dueDate().isBefore(date))
+//                                            .toList();
+
+                    DataAccess.getMembers().stream()
+                            .filter(member -> member.getCheckoutRecord().getCheckOutRecordEntries().stream()
+                                    .anyMatch(entry -> entry.dueDate().isBefore(date)))
+                                    .forEach(m -> {
+                                        System.out.println("Id:"+m.memberId() + " Name:" + m.firstName() + " " + m.lastName());
+                                        m.getCheckoutRecord().getCheckOutRecordEntries().stream()
+                                                .filter(entry -> entry.dueDate().isBefore(date))
+                                                .forEach(e -> System.out.println("    Book isbn:" + e.getIsbn() + " Due Date:" + e.dueDate()));
+
+                                    });
+
+
                     System.out.println();
                     break;
 
